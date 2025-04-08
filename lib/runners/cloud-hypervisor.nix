@@ -102,6 +102,7 @@ in {
       # workaround cloud-hypervisor sometimes
       # stumbling over a preexisting socket
       rm -f '${socket}'
+      rm -f '${serialSocket}'
     ''}
 
   '' + lib.optionalString supportsNotifySocket ''
