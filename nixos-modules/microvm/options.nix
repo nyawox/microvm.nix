@@ -63,6 +63,13 @@ in
       type = types.lines;
     };
 
+    serialSocket = mkOption {
+      description = "Hypervisor serial socket path";
+      default = "${hostName}-serial.sock";
+      defaultText = literalExpression ''"''${hostName}-serial.sock"'';
+      type = with types; nullOr str;
+    };
+
     socket = mkOption {
       description = "Hypervisor control socket path";
       default = "${hostName}.sock";

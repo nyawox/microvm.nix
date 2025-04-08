@@ -5,7 +5,7 @@
 
 let
   inherit (pkgs) lib;
-  inherit (microvmConfig) vcpu mem balloon initialBalloonMem deflateOnOOM hotplugMem hotpluggedMem user interfaces volumes shares socket devices hugepageMem graphics storeDisk storeOnDisk kernel initrdPath;
+  inherit (microvmConfig) vcpu mem balloon initialBalloonMem deflateOnOOM hotplugMem hotpluggedMem user interfaces volumes serialSocket shares socket devices hugepageMem graphics storeDisk storeOnDisk kernel initrdPath;
   inherit (microvmConfig.cloud-hypervisor) extraArgs;
 
   kernelPath = {
@@ -139,8 +139,8 @@ in {
         )
         "--cpus" "boot=${toString vcpu}"
         "--watchdog"
-        "--console" "null"
-        "--serial" "tty"
+        "--console" "tty"
+        "--serial" "socket=${serialSocket}"
         "--kernel" kernelPath
         "--initramfs" initrdPath
         "--cmdline" "${kernelConsole} reboot=t panic=-1 ${builtins.unsafeDiscardStringContext (toString microvmConfig.kernelParams)}"
