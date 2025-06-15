@@ -1,0 +1,24 @@
+From 62cad1bab6fd01781838334a8f0a8edb7d1c583f Mon Sep 17 00:00:00 2001
+From: nyawox <git@dof.pet>
+Date: Tue, 8 Apr 2025 23:23:44 +0900
+Subject: [PATCH] rm serialsocket
+
+---
+ lib/runners/cloud-hypervisor.nix | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/lib/runners/cloud-hypervisor.nix b/lib/runners/cloud-hypervisor.nix
+index 4a1e718..f4e3ec8 100644
+--- a/lib/runners/cloud-hypervisor.nix
++++ b/lib/runners/cloud-hypervisor.nix
+@@ -101,6 +101,7 @@ in {
+       # workaround cloud-hypervisor sometimes
+       # stumbling over a preexisting socket
+       rm -f '${socket}'
++      rm -f '${serialSocket}'
+     ''}
+ 
+   '' + lib.optionalString supportsNotifySocket ''
+-- 
+2.48.1
+

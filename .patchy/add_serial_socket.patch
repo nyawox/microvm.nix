@@ -1,0 +1,55 @@
+From f3d968d21022d975bcfe896fd3f5ec1957faf106 Mon Sep 17 00:00:00 2001
+From: nyawox <git@dof.pet>
+Date: Tue, 8 Apr 2025 16:59:54 +0900
+Subject: [PATCH] add serial socket
+
+---
+ lib/runners/cloud-hypervisor.nix  | 6 +++---
+ nixos-modules/microvm/options.nix | 7 +++++++
+ 2 files changed, 10 insertions(+), 3 deletions(-)
+
+diff --git a/lib/runners/cloud-hypervisor.nix b/lib/runners/cloud-hypervisor.nix
+index ef6de3f..4a1e718 100644
+--- a/lib/runners/cloud-hypervisor.nix
++++ b/lib/runners/cloud-hypervisor.nix
+@@ -5,7 +5,7 @@
+ 
+ let
+   inherit (pkgs) lib;
+-  inherit (microvmConfig) vcpu mem balloon initialBalloonMem deflateOnOOM hotplugMem hotpluggedMem user interfaces volumes shares socket devices hugepageMem graphics storeDisk storeOnDisk kernel initrdPath;
++  inherit (microvmConfig) vcpu mem balloon initialBalloonMem deflateOnOOM hotplugMem hotpluggedMem user interfaces volumes serialSocket shares socket devices hugepageMem graphics storeDisk storeOnDisk kernel initrdPath;
+   inherit (microvmConfig.cloud-hypervisor) extraArgs;
+ 
+   kernelPath = {
+@@ -138,8 +138,8 @@ in {
+         )
+         "--cpus" "boot=${toString vcpu}"
+         "--watchdog"
+-        "--console" "null"
+-        "--serial" "tty"
++        "--console" "tty"
++        "--serial" "socket=${serialSocket}"
+         "--kernel" kernelPath
+         "--initramfs" initrdPath
+         "--cmdline" "${kernelConsole} reboot=t panic=-1 ${builtins.unsafeDiscardStringContext (toString microvmConfig.kernelParams)}"
+diff --git a/nixos-modules/microvm/options.nix b/nixos-modules/microvm/options.nix
+index 05dba15..72350c2 100644
+--- a/nixos-modules/microvm/options.nix
++++ b/nixos-modules/microvm/options.nix
+@@ -63,6 +63,13 @@ in
+       type = types.lines;
+     };
+ 
++    serialSocket = mkOption {
++      description = "Hypervisor serial socket path";
++      default = "${hostName}-serial.sock";
++      defaultText = literalExpression ''"''${hostName}-serial.sock"'';
++      type = with types; nullOr str;
++    };
++
+     socket = mkOption {
+       description = "Hypervisor control socket path";
+       default = "${hostName}.sock";
+-- 
+2.48.1
+

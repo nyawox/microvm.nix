@@ -1,0 +1,27 @@
+From 2d42af356d6f34b4936138824e1a56ff027bd192 Mon Sep 17 00:00:00 2001
+From: nyawox <git@dof.pet>
+Date: Tue, 8 Apr 2025 02:43:47 +0900
+Subject: [PATCH] fix: cloud-hypervisor memory value
+
+---
+ lib/runners/cloud-hypervisor.nix | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/lib/runners/cloud-hypervisor.nix b/lib/runners/cloud-hypervisor.nix
+index b9d54a5..ef6de3f 100644
+--- a/lib/runners/cloud-hypervisor.nix
++++ b/lib/runners/cloud-hypervisor.nix
+@@ -39,9 +39,8 @@ let
+     # prevents Kernel Same-page Merging.
+     shared = if useVirtiofs || graphics.enable then "on" else "off";
+   }
+-  # add ballooning options and override 'size' key
++  # add ballooning options
+   // lib.optionalAttrs useHotPlugMemory {
+-    size = "${toString (mem + hotplugMem)}M";
+     hotplug_method = "virtio-mem";
+     hotplug_size = "${toString hotplugMem}M";
+     hotplugged_size = "${toString hotpluggedMem}M";
+-- 
+2.48.1
+
